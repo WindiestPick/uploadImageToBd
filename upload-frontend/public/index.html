@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <form id="form" enctype="multipart/form-data">
+        <input type="file" name="avatar" />
+        <br/>
+        <button type="submit" name="upload">Upload</button>
+        <br/>
+        <img id="avatar">
+    </form>
+
+    <script>
+        form.addEventListener('submit', event => {
+            event.preventDefault();
+            let formData = new FormData();
+            formData.append('avatar', event.target[0].files[0]);
+            fetch('http://localhost:7755/api/avatar', {method: 'post', body: formData})
+            .then(res => res.json())
+            .then(res => {
+                avatar.src = `http://localhost:7755${res.payload.url}`;
+                console.log(res.payload);
+
+                fetch('http://localhost:7755/db/saveimg', 
+                {
+                    method: 'post',
+                    mode:"cors",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({id:res.payload.id, url:res.payload.url})
+                })
+                .then(res => console.log(res.json()))
+            })
+            .catch(console.log);
+        });
+    </script>
+</body>
