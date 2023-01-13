@@ -1,5 +1,38 @@
 <!DOCTYPE html>
 <html>
+
+<header>
+
+    <script>
+        function printImg(list){
+    
+            
+            let divizoria = document.getElementById("printImg");
+            
+            for(i = 0; i < list.length; i++){
+                divizoria.innerHTML += "<p>ID da imagem: "+list[i].id+"</p><img src='http://192.168.4.120:7755"+ list[i].url_img +"'/>"
+            }
+            
+        }
+
+        async function consultar(){
+            await fetch('http://localhost:7755/db/importimg', 
+                {
+                    method: 'post',
+                    mode:"cors",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                })
+                .then(res => res.json())
+                .then(res => {printImg(res)})
+        }
+
+    </script>
+
+</header>
+
 <body>
     <form id="form" enctype="multipart/form-data">
         <input type="file" name="avatar" />
@@ -8,6 +41,13 @@
         <br/>
         <img id="avatar">
     </form>
+
+    <div id="printImg">
+
+    </div>
+
+    <button type="button" id="consulta" name="consulta" onclick="consultar()">Consulta</button>
+
 
     <script>
         form.addEventListener('submit', event => {
@@ -34,5 +74,7 @@
             })
             .catch(console.log);
         });
+
+
     </script>
 </body>
